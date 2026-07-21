@@ -28,10 +28,18 @@ jobs:
           cmake .. -DCMAKE_BUILD_TYPE=Release
           cmake --build . --config Release
 
+      - name: Bundle Qt runtime and package
+        run: |
+          $dist = "kdictionary-lingoes-windows"
+          New-Item -ItemType Directory -Path $dist | Out-Null
+          Copy-Item build/Release/kdictionary-lingoes.exe $dist/
+          windeployqt --release --no-translations --no-compiler-runtime "$dist/kdictionary-lingoes.exe"
+          Compress-Archive -Path "$dist/*" -DestinationPath "$dist.zip"
+
       - name: Upload binary to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: build/Release/kdictionary-lingoes.exe
+          files: kdictionary-lingoes-windows.zip
           name: 'Latest Build'
           body: 'Automatically built on windows-latest, from master commit ${{ github.sha }}'
           tag_name: latest
