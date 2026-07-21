@@ -17,7 +17,7 @@ jobs:
             qtbase5-dev
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Build
         run: |
